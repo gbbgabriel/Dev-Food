@@ -1,6 +1,3 @@
-import { Email } from '@application/entities/email.entity copy';
-import { Name } from '@application/entities/name.entity';
-import { User } from '@application/entities/user.entity';
 import { UserRepository } from '@application/repositories/user-repositories';
 import { Injectable } from '@nestjs/common';
 

@@ -15,6 +15,8 @@ import { AuthResetPasswordDTO } from './dto/auth.reset-password.dto';
 import { CreateUser } from '@application/use-cases/create-user';
 import { Email } from '@application/entities/email.entity copy';
 import { AuthGuard } from './guards/auth-guard';
+import { User } from '@application/decorators/user-decorator';
+import { UserViewModel } from '@infra/http/view-models/user-view-model';
 
 @Controller('auth')
 export class AuthController {
@@ -48,9 +50,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Post('me')
-  async me(@Req() req: any) {
-    console.log(req.tokenPayload);
-
-    return req.tokenPayload;
+  async me(@User() request) {
+    const { user } = request;
+    return UserViewModel.toHTTP(user);
   }
 }

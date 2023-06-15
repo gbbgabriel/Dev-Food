@@ -7,6 +7,7 @@ import { DeleteUser } from '@application/use-cases/delete-user';
 import { PrismaUserRepository } from '@infra/database/prisma/prisma-user-repository';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@infra/database/prisma/prisma.service';
+import { ShowUser } from '@application/use-cases/show-user';
 
 @Module({
   imports: [DatabaseModule],
@@ -15,10 +16,11 @@ import { PrismaService } from '@infra/database/prisma/prisma.service';
     CreateUser,
     UpdateUser,
     DeleteUser,
+    ShowUser,
     JwtService,
     PrismaService,
     PrismaUserRepository,
   ],
-  exports: [CreateUser, UpdateUser, DeleteUser],
+  exports: [CreateUser, UpdateUser, DeleteUser, ShowUser],
 })
 export class HttpModule {}

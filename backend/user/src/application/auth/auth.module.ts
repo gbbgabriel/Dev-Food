@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { HttpModule } from '@infra/http/controllers/http.module';
 import { DatabaseModule } from '@infra/database/database.module';
 import { AuthService } from './auth.service';
+import { ShowUser } from '@application/use-cases/show-user';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { AuthService } from './auth.service';
     DatabaseModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, ShowUser],
 })
 export class AuthModule {}

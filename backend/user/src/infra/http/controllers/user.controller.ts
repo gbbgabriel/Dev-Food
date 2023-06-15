@@ -9,11 +9,13 @@ import {
   Delete,
   Query,
   ParseUUIDPipe,
+  Get,
 } from '@nestjs/common';
 import { UserViewModel } from '../view-models/user-view-model';
 import { UpdateUserDTO } from '@application/dto/update-user.dto';
 import { UpdateUser } from '@application/use-cases/update-user';
 import { DeleteUser } from '@application/use-cases/delete-user';
+import { ShowUser } from '@application/use-cases/show-user';
 
 @Controller('users')
 export class UserController {
@@ -21,6 +23,7 @@ export class UserController {
     private readonly createUser: CreateUser,
     private readonly updateUser: UpdateUser,
     private readonly deleteUser: DeleteUser,
+    private readonly showUser: ShowUser,
   ) {}
 
   @Post()
@@ -29,9 +32,7 @@ export class UserController {
 
     const { user } = await this.createUser.execute({ name, email, password });
 
-    const mappedUser = UserViewModel.toHTTP(user);
-
-    return mappedUser;
+    return UserViewModel.toHTTP(user);
   }
 
   @Patch()
@@ -48,14 +49,19 @@ export class UserController {
       password,
     });
 
-    const mappedUser = UserViewModel.toHTTP(user);
-
-    return mappedUser;
+    return UserViewModel.toHTTP(user);
   }
 
   @Delete()
   async delete(@Query('id', new ParseUUIDPipe()) userId: string) {
     console.log(userId);
     await this.deleteUser.execute(userId);
+  }
+
+  @Get('show')
+  async findById(@Query('id', new ParseUUIDPipe()) userId: string) {
+    const { user } = await this.showUser.execute(userId);
+
+    return UserViewModel.toHTTP(user);
   }
 }

@@ -1,14 +1,16 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
+import { ShowUser } from '@application/use-cases/show-user';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly showUser: ShowUser,
+  ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
     const { authorization } = request.headers;
@@ -16,17 +18,17 @@ export class AuthGuard implements CanActivate {
     console.log(authorization);
 
     try {
-      const data = this.authService.checkToken(
+      const data = await this.authService.checkToken(
         (authorization ?? '').split(' ')[1],
       );
 
       request.tokenPayload = data;
+
+      request.user = await this.showUser.execute(data.id);
 
       return true;
     } catch (error) {
       return false;
     }
   }
-
-  //nao está retornando o tokenPayload, mas está sendo exebido no console
 }
