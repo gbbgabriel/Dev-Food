@@ -1,5 +1,8 @@
+import { Role } from '@application/enums/role-enum';
 import {
   IsEmail,
+  IsEnum,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -20,4 +23,8 @@ export class CreateUserDTO {
 
   @IsString()
   name: string;
+
+  @IsOptional()
+  @IsEnum(Role)
+  role: string;
 }

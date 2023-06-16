@@ -9,6 +9,7 @@ interface UpdateUserRequest {
   name?: string;
   email?: string;
   password?: string;
+  role?: string;
 }
 
 interface UpdateUserResponse {
@@ -20,7 +21,7 @@ export class UpdateUser {
   constructor(private userRepository: UserRepository) {}
 
   async execute(request: UpdateUserRequest): Promise<UpdateUserResponse> {
-    const { userId, name, email, password } = request;
+    const { userId, name, email, password, role } = request;
 
     const user = await this.userRepository.findById(userId);
 
@@ -31,6 +32,7 @@ export class UpdateUser {
     user.name = new Name(name ?? user.name.value);
     user.email = new Email(email ?? user.email.value);
     user.password = password ?? user.password;
+    user.role = role ?? user.role;
 
     await this.userRepository.update(user);
 

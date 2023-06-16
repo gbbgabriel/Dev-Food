@@ -16,6 +16,8 @@ import { UpdateUserDTO } from '@application/dto/update-user.dto';
 import { UpdateUser } from '@application/use-cases/update-user';
 import { DeleteUser } from '@application/use-cases/delete-user';
 import { ShowUser } from '@application/use-cases/show-user';
+import { Role } from '@application/enums/role-enum';
+import { Roles } from '@application/decorators/roles-decorator';
 
 @Controller('users')
 export class UserController {
@@ -26,6 +28,7 @@ export class UserController {
     private readonly showUser: ShowUser,
   ) {}
 
+  @Roles(Role.Admin)
   @Post()
   async create(@Body() createUserDTo: CreateUserDTO) {
     const { name, email, password } = createUserDTo;
@@ -35,6 +38,7 @@ export class UserController {
     return UserViewModel.toHTTP(user);
   }
 
+  @Roles(Role.Admin)
   @Patch()
   async update(
     @Query('id', new ParseUUIDPipe()) userId: string,
@@ -52,12 +56,14 @@ export class UserController {
     return UserViewModel.toHTTP(user);
   }
 
+  @Roles(Role.Admin)
   @Delete()
   async delete(@Query('id', new ParseUUIDPipe()) userId: string) {
     console.log(userId);
     await this.deleteUser.execute(userId);
   }
 
+  @Roles(Role.Admin)
   @Get('show')
   async findById(@Query('id', new ParseUUIDPipe()) userId: string) {
     const { user } = await this.showUser.execute(userId);

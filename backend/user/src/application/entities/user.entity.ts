@@ -8,6 +8,7 @@ export interface UserProps {
   name: Name;
   email: Email;
   password: string;
+  role: string;
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -50,6 +51,14 @@ export class User {
 
   public get password(): string {
     return this.props.password;
+  }
+
+  public set role(role: string) {
+    this.props.role = role;
+  }
+
+  public get role(): string {
+    return this.props.role;
   }
 
   public get createdAt(): Date {

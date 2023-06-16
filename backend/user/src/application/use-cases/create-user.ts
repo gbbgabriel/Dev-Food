@@ -25,6 +25,7 @@ export class CreateUser {
       name: new Name(name),
       email: new Email(email),
       password,
+      role: 'user',
     });
 
     await this.userRepository.create(user);
