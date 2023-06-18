@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { HttpModule } from '@infra/http/controllers/http.module';
@@ -12,10 +12,11 @@ import { ShowUser } from '@application/use-cases/show-user';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
-    HttpModule,
+    forwardRef(() => HttpModule),
     DatabaseModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, ShowUser],
+  exports: [AuthService],
 })
 export class AuthModule {}

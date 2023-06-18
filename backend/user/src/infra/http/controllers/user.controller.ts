@@ -10,6 +10,7 @@ import {
   Query,
   ParseUUIDPipe,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { UserViewModel } from '../view-models/user-view-model';
 import { UpdateUserDTO } from '@application/dto/update-user.dto';
@@ -18,7 +19,10 @@ import { DeleteUser } from '@application/use-cases/delete-user';
 import { ShowUser } from '@application/use-cases/show-user';
 import { Role } from '@application/enums/role-enum';
 import { Roles } from '@application/decorators/roles-decorator';
+import { RoleGuard } from '@application/guards/role-guard';
+import { AuthGuard } from '@application/guards/auth-guard';
 
+@UseGuards(AuthGuard, RoleGuard)
 @Controller('users')
 export class UserController {
   constructor(

@@ -14,9 +14,9 @@ import { AuthForgotPasswordDTO } from './dto/auth.forgot-password.dto';
 import { AuthResetPasswordDTO } from './dto/auth.reset-password.dto';
 import { CreateUser } from '@application/use-cases/create-user';
 import { Email } from '@application/entities/email.entity copy';
-import { AuthGuard } from './guards/auth-guard';
 import { User } from '@application/decorators/user-decorator';
 import { UserViewModel } from '@infra/http/view-models/user-view-model';
+import { AuthGuard } from '@application/guards/auth-guard';
 
 @Controller('auth')
 export class AuthController {

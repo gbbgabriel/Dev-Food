@@ -60,7 +60,10 @@ export class AuthService {
       throw new Error('E-mail ou senha inválido.');
     }
 
-    this.generateToken(user);
+    if (password != user.password) {
+      throw new Error('E-mail ou senha inválido.');
+    }
+    return this.generateToken(user);
   }
 
   async register(body: AuthRegisterDTO): Promise<any> {
