@@ -5,7 +5,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRegisterDTO } from './dto/auth.register.dto';
 import { CreateUser } from '@application/use-cases/create-user';
-import { Token } from 'typescript';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -67,16 +67,6 @@ export class AuthService {
   }
 
   async register(body: AuthRegisterDTO): Promise<any> {
-    // const payload = {
-    //   sub: user.id,
-    //   username: user.username,
-    //   email: user.email,
-    // };
-    // return {
-    //   user,
-    //   token: await this.generateToken(payload),
-    // };
-
     const { name, email, password } = body;
 
     const { user } = await this.createUser.execute({ name, email, password });

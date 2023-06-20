@@ -42,7 +42,6 @@ export class UserController {
     return UserViewModel.toHTTP(user);
   }
 
-  @Roles(Role.Admin)
   @Patch()
   async update(
     @Query('id', new ParseUUIDPipe()) userId: string,
