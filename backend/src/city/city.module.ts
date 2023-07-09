@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { CacheModule as CacheModuleNest } from '@nestjs/cache-manager';
 import { CityController } from './city.controller';
 import { CityService } from './city.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
