@@ -28,6 +28,13 @@ export class UserService {
     });
   }
 
+  async getUserByIdUsingRelations(userId: number): Promise<UserEntity> {
+    return this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['addresses'],
+    });
+  }
+
   async findUserById(userId: number): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
