@@ -1,10 +1,10 @@
-import { Injectable, Param, Post } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddressEntity } from './entities/address.entity';
 import { Repository } from 'typeorm';
 import { CreateAddressDto } from './dtos/createAddress.dto';
-import { UserService } from 'src/user/user.service';
-import { CityService } from 'src/city/city.service';
+import { UserService } from '@src/user/user.service';
+import { CityService } from '@src/city/city.service';
 
 @Injectable()
 export class AddressService {

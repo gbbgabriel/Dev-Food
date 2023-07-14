@@ -2,9 +2,9 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { log } from 'console';
-import { LoginPayload } from 'src/auth/dtos/loginPayload.dto';
-import { ROLES_KEY } from 'src/decorators/roles.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
+import { LoginPayload } from '@src/auth/dtos/loginPayload.dto';
+import { ROLES_KEY } from '@src/decorators/roles.decorator';
+import { UserType } from '@src/user/enum/user-type.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -35,7 +35,6 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    const { user } = context.switchToHttp().getRequest();
     return requiredRoles.some((role) => role === loginPayload.typeUser);
   }
 }
