@@ -82,4 +82,18 @@ describe('AddressService', () => {
       service.createAddress(createAddressMock, userEntityMock.id),
     ).rejects.toThrowError();
   });
+
+  it('should return all address to user', async () => {
+    const address = await service.findAddressByUserId(userEntityMock.id);
+
+    expect(address).toEqual([AddressMock]);
+  });
+
+  it('should return not found if not address registered', async () => {
+    jest.spyOn(addressRepository, 'find').mockResolvedValue(undefined);
+
+    expect(
+      service.findAddressByUserId(userEntityMock.id),
+    ).rejects.toThrowError();
+  });
 });
