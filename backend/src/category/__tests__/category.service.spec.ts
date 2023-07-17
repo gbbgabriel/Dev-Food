@@ -4,7 +4,7 @@ import { CategoryEntity } from '../entities/category.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryMock } from '../__mocks__/category.mock';
-import exp from 'constants';
+import { createCategoryMock } from '../__mocks__/create-category.mock';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -19,6 +19,7 @@ describe('CategoryService', () => {
           useValue: {
             find: jest.fn().mockResolvedValue([CategoryMock]),
             save: jest.fn().mockResolvedValue(CategoryMock),
+            findOne: jest.fn().mockResolvedValue(CategoryMock),
             update: jest.fn(),
             delete: jest.fn(),
           },
@@ -52,5 +53,37 @@ describe('CategoryService', () => {
     jest.spyOn(categoryRepository, 'find').mockRejectedValue(new Error());
 
     expect(service.findAllCategories()).rejects.toThrowError();
+  });
+
+  it('should return error if exist category name', async () => {
+    expect(service.createCategory(createCategoryMock)).rejects.toThrowError();
+  });
+
+  it('should return category after save', async () => {
+    jest.spyOn(categoryRepository, 'findOne').mockResolvedValue(undefined);
+
+    const category = await service.createCategory(createCategoryMock);
+
+    expect(category).toEqual(CategoryMock);
+  });
+
+  it('should return error in exception', async () => {
+    jest.spyOn(categoryRepository, 'save').mockRejectedValue(new Error());
+
+    expect(service.createCategory(createCategoryMock)).rejects.toThrowError();
+  });
+
+  it('should return category in findCategoryByName', async () => {
+    expect(await service.findCategoryByName(CategoryMock.name)).toEqual(
+      CategoryMock,
+    );
+  });
+
+  it('should return error if findCategoryByName empty', async () => {
+    jest.spyOn(categoryRepository, 'findOne').mockResolvedValue(undefined);
+
+    expect(
+      service.findCategoryByName(CategoryMock.name),
+    ).rejects.toThrowError();
   });
 });
