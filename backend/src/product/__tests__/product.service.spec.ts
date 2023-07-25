@@ -7,6 +7,8 @@ import { productMock } from '../__mocks__/product.mock';
 import { CategoryService } from '@src/category/category.service';
 import { CategoryMock } from '@src/category/__mocks__/category.mock';
 import { createProductMock } from '../__mocks__/createProduct.mock';
+import { updateProductMock } from '../__mocks__/updateProduct.mock';
+import { BadRequestException } from '@nestjs/common';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -24,6 +26,7 @@ describe('ProductService', () => {
             findOne: jest.fn().mockResolvedValue(productMock),
             save: jest.fn().mockResolvedValue(productMock),
             delete: jest.fn().mockResolvedValue(undefined),
+            update: jest.fn().mockResolvedValue(undefined),
           },
         },
         {
@@ -96,5 +99,34 @@ describe('ProductService', () => {
     const deleteProduct = await service.deleteProduct(productMock.id);
 
     expect(deleteProduct).toBeUndefined();
+  });
+
+  it('should return product after update', async () => {
+    jest.spyOn(productRepository, 'update').mockResolvedValue(undefined);
+
+    await service.updateProduct(productMock.id, updateProductMock);
+
+    expect(productRepository.update).toBeCalledWith(
+      productMock.id,
+      updateProductMock,
+    );
+  });
+
+  it('should throw error if product not found in updateProduct', async () => {
+    // Espiona a função de update do repositório e define o retorno como um erro
+    jest.spyOn(productRepository, 'update').mockRejectedValue(new Error());
+
+    // Chama o serviço para atualizar o produto com um ID indefinido (simulando produto não encontrado)
+    await expect(
+      service.updateProduct(undefined, updateProductMock),
+    ).rejects.toThrowError();
+  });
+
+  it('should throw error if no body is sent in the request', async () => {
+    jest.spyOn(productRepository, 'update').mockResolvedValue(undefined);
+
+    await expect(
+      service.updateProduct(productMock.id, undefined),
+    ).rejects.toThrowError();
   });
 });
