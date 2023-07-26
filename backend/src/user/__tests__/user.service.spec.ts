@@ -96,4 +96,18 @@ describe('UserService', () => {
 
     expect(await service.createUser(createUserMock)).toEqual(userEntityMock);
   });
+
+  it('should return  user after update', async () => {
+    const user = await service.updateUser(userEntityMock.id, createUserMock);
+
+    expect(user).toEqual(userEntityMock);
+  });
+
+  it('should return error in update user', async () => {
+    jest.spyOn(userRepository, 'save').mockRejectedValue(new Error());
+
+    expect(
+      service.updateUser(userEntityMock.id, createUserMock),
+    ).rejects.toThrowError();
+  });
 });
