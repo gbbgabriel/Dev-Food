@@ -5,6 +5,10 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { userEntityMock } from '../__mocks__/user.mock';
 import { createUserMock } from '../__mocks__/createUser.mock';
+import {
+  updatePasswordInvalidMock,
+  updatePasswordMock,
+} from '../__mocks__/updateUser.mock';
 
 describe('UserService', () => {
   let service: UserService;
@@ -87,11 +91,11 @@ describe('UserService', () => {
     );
   });
 
-  it('should return error if user exist', async () => {
+  it('should return error if user exist in createUser', async () => {
     expect(service.createUser(createUserMock)).rejects.toThrowError();
   });
 
-  it('should return  if user  not exist', async () => {
+  it('should return  if user  not exist in createUser', async () => {
     jest.spyOn(userRepository, 'findOne').mockResolvedValue(undefined);
 
     expect(await service.createUser(createUserMock)).toEqual(userEntityMock);
@@ -108,6 +112,28 @@ describe('UserService', () => {
 
     expect(
       service.updateUser(userEntityMock.id, createUserMock),
+    ).rejects.toThrowError();
+  });
+
+  it('should return  user after update password', async () => {
+    const user = await service.updatePasswordUser(
+      userEntityMock.id,
+      updatePasswordMock,
+    );
+
+    expect(user).toEqual(userEntityMock);
+  });
+
+  it('should return invalid password in error', async () => {
+    expect(
+      service.updatePasswordUser(userEntityMock.id, updatePasswordInvalidMock),
+    ).rejects.toThrowError();
+  });
+
+  it('should return error in user not exist in updatePasswordUser', async () => {
+    jest.spyOn(userRepository, 'findOne').mockResolvedValue(undefined);
+    expect(
+      service.updatePasswordUser(userEntityMock.id, updatePasswordInvalidMock),
     ).rejects.toThrowError();
   });
 });

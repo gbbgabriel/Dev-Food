@@ -17,6 +17,8 @@ import { Entity } from 'typeorm';
 import { UpdateUserDto } from './dtos/updateUser.dto';
 import { UserId } from '@src/decorators/userId.decorator';
 import { UpdatePasswordDto } from './dtos/updatePassword.dto';
+import { UserType } from './enum/user-type.enum';
+import { Roles } from '@src/decorators/roles.decorator';
 
 @Controller('user')
 export class UserController {
@@ -28,6 +30,7 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
+  @Roles(UserType.Admin)
   @Get()
   async findAllUser(): Promise<ReturnUserDto[]> {
     return (await this.userService.findAllUser()).map(
@@ -35,6 +38,7 @@ export class UserController {
     );
   }
 
+  @Roles(UserType.Admin)
   @Get('/:userId')
   async getUserById(@Param('userId') userId: number): Promise<ReturnUserDto> {
     return new ReturnUserDto(
@@ -42,6 +46,7 @@ export class UserController {
     );
   }
 
+  @Roles(UserType.Admin, UserType.User)
   @Put()
   async updateUser(
     @UserId() userId: number,
@@ -52,13 +57,14 @@ export class UserController {
     );
   }
 
+  @Roles(UserType.Admin, UserType.User)
   @Patch()
   async updatePassword(
     @UserId() userId: number,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<ReturnUserDto> {
     return new ReturnUserDto(
-      await this.userService.upadtePasswordUser(userId, updatePasswordDto),
+      await this.userService.updatePasswordUser(userId, updatePasswordDto),
     );
   }
 }
