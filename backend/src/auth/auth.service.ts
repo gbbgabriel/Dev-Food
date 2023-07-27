@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserEntity } from '@src/user/entities/user.entity';
 import { LoginDto } from './dtos/login.dto';
 import { UserService } from '@src/user/user.service';
@@ -12,21 +16,21 @@ import { comparePassword } from '@src/utils/password';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private jwtService: JwtService,
   ) {}
 
-  async login(loginDTo: LoginDto): Promise<ReturnLoginDto> {
-    const user: UserEntity | undefined = await this.userService.findUserByEmail(
-      loginDTo.email,
-    );
+  async login(loginDto: LoginDto): Promise<ReturnLoginDto> {
+    const user: UserEntity | undefined = await this.userService
+      .findUserByEmail(loginDto.email)
+      .catch(() => undefined);
 
-    const isPasswordValid = await comparePassword(
-      loginDTo.password,
+    const isMatch = await comparePassword(
+      loginDto.password,
       user?.password || '',
     );
 
-    if (!user || !isPasswordValid) {
-      throw new BadRequestException('Email or password invalid');
+    if (!user || !isMatch) {
+      throw new NotFoundException('Email or passord invalid');
     }
 
     return {

@@ -54,8 +54,8 @@ describe('AuthService', () => {
 
   it('should return user if password invalid and email valid', async () => {
     expect(
-      service.login({ ...loginUserMock, password: '1234' }),
-    ).rejects.toThrow();
+      service.login({ ...loginUserMock, password: '4324' }),
+    ).rejects.toThrowError();
   });
 
   it('should return user if email not exist', async () => {
