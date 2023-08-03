@@ -15,6 +15,8 @@ import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { CartProductModule } from './cart-product/cart-product.module';
 
+console.log(__dirname);
+
 @Module({
   imports: [
     ConfigModule.forRoot({

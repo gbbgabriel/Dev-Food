@@ -3,8 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
-  PrimaryColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -16,13 +15,16 @@ export class CartEntity {
   @Column({ name: 'user_id', nullable: false })
   userId: number;
 
+  @Column({ name: 'active', nullable: false })
+  active: boolean;
+
   @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: Date;
 
   @CreateDateColumn({ name: 'updated_at', nullable: false })
   updatedAt: Date;
 
-  @ManyToOne(
+  @OneToMany(
     () => CartProductEntity,
     (cartProduct: CartProductEntity) => cartProduct.cart,
   )
