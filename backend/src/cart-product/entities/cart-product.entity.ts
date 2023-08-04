@@ -20,6 +20,9 @@ export class CartProductEntity {
   @Column({ name: 'product_id', nullable: false })
   productId: number;
 
+  @Column({ name: 'amount', nullable: false })
+  amount: number;
+
   @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: Date;
 

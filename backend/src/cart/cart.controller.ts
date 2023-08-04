@@ -8,7 +8,7 @@ import {
 import { Roles } from '@src/decorators/roles.decorator';
 import { UserType } from '@src/user/enum/user-type.enum';
 import { CartEntity } from './entities/cart.entity';
-import { InsertCart } from './dtos/insert-cart.dto';
+import { InsertCartDTO } from './dtos/insert-cart.dto';
 import { CartService } from './cart.service';
 import { UserId } from '@src/decorators/userId.decorator';
 
@@ -19,10 +19,10 @@ export class CartController {
 
   @UsePipes(ValidationPipe)
   @Post()
-  async insertCart(
-    @Body() insertCart: InsertCart,
+  async InsertCartDTO(
+    @Body() insertCart: InsertCartDTO,
     @UserId() userId: number,
   ): Promise<CartEntity> {
-    return await this.cartService.insertProductCart(userId);
+    return await this.cartService.insertProductInCart(insertCart, userId);
   }
 }
