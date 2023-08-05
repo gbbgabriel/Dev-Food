@@ -7,6 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'cart_product' })
@@ -26,7 +27,7 @@ export class CartProductEntity {
   @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: Date;
 
-  @CreateDateColumn({ name: 'updated_at', nullable: false })
+  @UpdateDateColumn({ name: 'updated_at', nullable: false })
   updatedAt: Date;
 
   @ManyToOne(
@@ -38,5 +39,5 @@ export class CartProductEntity {
 
   @ManyToOne(() => CartEntity, (cart: CartEntity) => cart.cartProduct)
   @JoinColumn({ name: 'cart_id', referencedColumnName: 'id' })
-  cart?: CartProductEntity;
+  cart?: CartEntity;
 }
