@@ -13,6 +13,21 @@ export class CartService {
     private readonly cartProductService: CartProductService,
   ) {}
 
+  async clearCart(userId: number): Promise<boolean> {
+    const cart = await this.findCartByUserId(userId);
+
+    await this.cartRepository
+      .save({
+        ...cart,
+        active: false,
+      })
+      .catch(() => {
+        throw new NotFoundException(`Cart not found`);
+      });
+
+    return true;
+  }
+
   async findCartByUserId(
     userId: number,
     isRelations?: boolean,
@@ -61,6 +76,6 @@ export class CartService {
       insertCartDTO.amount,
     );
 
-    return this.findCartByUserId(userId, true);
+    return cart;
   }
 }

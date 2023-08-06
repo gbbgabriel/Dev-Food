@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   Post,
   UsePipes,
   ValidationPipe,
@@ -27,5 +29,17 @@ export class CartController {
     return new ReturnCartDTO(
       await this.cartService.insertProductInCart(insertCart, userId),
     );
+  }
+
+  @UsePipes(ValidationPipe)
+  @Get()
+  async findCartByUserId(@UserId() userId: number): Promise<ReturnCartDTO> {
+    return await this.cartService.findCartByUserId(userId, true);
+  }
+
+  @UsePipes(ValidationPipe)
+  @Delete()
+  async clearCart(@UserId() userId: number): Promise<boolean> {
+    return await this.cartService.clearCart(userId);
   }
 }
