@@ -57,4 +57,30 @@ export class CartProductService {
       amount: cartProduct.amount + amount,
     });
   }
+
+  async deleteProductInCart(
+    productId: number,
+    cartId: number,
+  ): Promise<boolean> {
+    await this.cartProductRepository.delete({ productId, cartId }).catch(() => {
+      throw new NotFoundException('Product not found in cart');
+    });
+
+    return true;
+  }
+
+  async updateAmountProductInCart(
+    productId: number,
+    amount: number,
+    cartId: number,
+  ): Promise<CartProductEntity> {
+    await this.productService.findProductById(productId);
+
+    const cartProduct = await this.verifyProductInCart(cartId, productId);
+
+    return this.cartProductRepository.save({
+      ...cartProduct,
+      amount,
+    });
+  }
 }

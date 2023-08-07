@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  Patch,
   Post,
   UsePipes,
   ValidationPipe,
@@ -31,15 +33,35 @@ export class CartController {
     );
   }
 
-  @UsePipes(ValidationPipe)
   @Get()
   async findCartByUserId(@UserId() userId: number): Promise<ReturnCartDTO> {
-    return await this.cartService.findCartByUserId(userId, true);
+    return new ReturnCartDTO(
+      await this.cartService.findCartByUserId(userId, true),
+    );
   }
 
   @UsePipes(ValidationPipe)
   @Delete()
   async clearCart(@UserId() userId: number): Promise<boolean> {
     return await this.cartService.clearCart(userId);
+  }
+
+  @Delete('/product/:productId')
+  async removeProductFromCart(
+    @UserId() userId: number,
+    @Param('productId') productId: number,
+  ): Promise<boolean> {
+    return await this.cartService.deleteProductInCart(userId, productId);
+  }
+
+  @UsePipes(ValidationPipe)
+  @Patch()
+  async updateProductInCart(
+    @UserId() userId: number,
+    @Body() updateCart: InsertCartDTO,
+  ): Promise<ReturnCartDTO> {
+    return new ReturnCartDTO(
+      await this.cartService.updateAmountProductInCart(updateCart, userId),
+    );
   }
 }
