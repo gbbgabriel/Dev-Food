@@ -146,7 +146,7 @@ describe('CartProductService', () => {
     expect(spy.mock.calls[0][0].amount).toEqual(inserCartMock.amount);
   });
 
-  it('should return cart product if not exists cart', async () => {
+  it('should increase the quantity of the product in the cart', async () => {
     const spy = jest.spyOn(cartProductRepository, 'save');
 
     const cartProduct = await service.insertProductInCart(
@@ -161,8 +161,7 @@ describe('CartProductService', () => {
     });
   });
 
-  //-----------------------------------------------------------------------------------
-
+  //Update
   it('should return error in exception updateAmountProductInCart', async () => {
     jest
       .spyOn(productService, 'findProductById')
@@ -189,7 +188,7 @@ describe('CartProductService', () => {
     ).rejects.toThrowError(NotFoundException);
   });
 
-  it('should return cart product if not exists carttt (updateAmountProductInCart)', async () => {
+  it('should return the updated product amount (updateAmountProductInCart)', async () => {
     const spy = jest.spyOn(cartProductRepository, 'save');
 
     const cartProduct = await service.updateAmountProductInCart(
