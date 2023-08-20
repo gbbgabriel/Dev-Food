@@ -7,8 +7,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { productMock } from '@src/product/__mocks__/product.mock';
 import { cartMock } from '@src/cart/__mocks__/cart.mock';
 import { inserCartMock } from '@src/cart/__mocks__/insert-cart.mock';
-import { productCartMock } from '../__mocks__/product-cart.mock';
+import { cartProductMock } from '../__mocks__/product-cart.mock';
 import { NotFoundException } from '@nestjs/common';
+import { updateCartMock } from '@src/cart/__mocks__/update-cart.mock';
 
 describe('CartProductService', () => {
   let service: CartProductService;
@@ -27,9 +28,9 @@ describe('CartProductService', () => {
         {
           provide: getRepositoryToken(CartProductEntity),
           useValue: {
-            findOne: jest.fn().mockResolvedValue(productCartMock),
+            findOne: jest.fn().mockResolvedValue(cartProductMock),
             delete: jest.fn().mockResolvedValue(true),
-            save: jest.fn().mockResolvedValue(productCartMock),
+            save: jest.fn().mockResolvedValue(cartProductMock),
           },
         },
         CartProductService,
@@ -64,7 +65,7 @@ describe('CartProductService', () => {
       cartMock.id,
     );
 
-    expect(productInCart).toEqual(productCartMock);
+    expect(productInCart).toEqual(cartProductMock);
   });
 
   it('should return error in exception create', async () => {
@@ -97,7 +98,7 @@ describe('CartProductService', () => {
       cartMock.id,
     );
 
-    expect(productInCart).toEqual(productCartMock);
+    expect(productInCart).toEqual(cartProductMock);
   });
 
   it('should return error if NotFoundException in verifyProductInCart', async () => {
@@ -114,5 +115,90 @@ describe('CartProductService', () => {
     expect(
       service.verifyProductInCart(productMock.id, cartMock.id),
     ).rejects.toThrowError();
+  });
+
+  it('should return error in exception insertProductCart', async () => {
+    jest
+      .spyOn(productService, 'findProductById')
+      .mockRejectedValue(new NotFoundException());
+
+    expect(
+      service.insertProductInCart(
+        cartMock.id,
+        inserCartMock.productId,
+        inserCartMock.amount,
+      ),
+    ).rejects.toThrowError(NotFoundException);
+  });
+
+  it('should return cart product if not exists cart', async () => {
+    const spy = jest.spyOn(cartProductRepository, 'save');
+
+    jest.spyOn(cartProductRepository, 'findOne').mockResolvedValue(undefined);
+
+    const cartProduct = await service.insertProductInCart(
+      cartMock.id,
+      inserCartMock.productId,
+      inserCartMock.amount,
+    );
+
+    expect(cartProduct).toEqual(cartProductMock);
+    expect(spy.mock.calls[0][0].amount).toEqual(inserCartMock.amount);
+  });
+
+  it('should return cart product if not exists cart', async () => {
+    const spy = jest.spyOn(cartProductRepository, 'save');
+
+    const cartProduct = await service.insertProductInCart(
+      cartMock.id,
+      inserCartMock.productId,
+      inserCartMock.amount,
+    );
+
+    expect(spy.mock.calls[0][0]).toEqual({
+      ...cartProduct,
+      amount: cartProduct.amount + inserCartMock.amount,
+    });
+  });
+
+  //-----------------------------------------------------------------------------------
+
+  it('should return error in exception updateAmountProductInCart', async () => {
+    jest
+      .spyOn(productService, 'findProductById')
+      .mockRejectedValue(new NotFoundException());
+
+    expect(
+      service.updateAmountProductInCart(
+        cartMock.id,
+        updateCartMock.productId,
+        updateCartMock.amount,
+      ),
+    ).rejects.toThrowError(NotFoundException);
+  });
+
+  it('should return cart product if not exists cart (updateAmountProductInCart)', async () => {
+    jest.spyOn(cartProductRepository, 'findOne').mockResolvedValue(undefined);
+
+    expect(
+      service.updateAmountProductInCart(
+        updateCartMock.amount,
+        updateCartMock.productId,
+        cartMock.id,
+      ),
+    ).rejects.toThrowError(NotFoundException);
+  });
+
+  it('should return cart product if not exists carttt (updateAmountProductInCart)', async () => {
+    const spy = jest.spyOn(cartProductRepository, 'save');
+
+    const cartProduct = await service.updateAmountProductInCart(
+      updateCartMock.amount,
+      updateCartMock.amount,
+      cartMock.id,
+    );
+
+    expect(cartProduct).toEqual(cartProductMock);
+    expect(spy.mock.calls[0][0].amount).toEqual(updateCartMock.amount);
   });
 });
