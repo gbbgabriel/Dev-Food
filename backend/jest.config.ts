@@ -10,7 +10,23 @@ export default {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
-  collectCoverageFrom: ['**/*.(t|j)s'],
+  collectCoverageFrom: [
+    '**/*.(t|j)s',
+    'jest.config.ts',
+    '!**/main.ts',
+    '!**/migration/*',
+    '!**/*.module.(t|j)s',
+    '!**/*.dto.(t|j)s',
+    '!**/*.entity.(t|j)s',
+    '!**/*.decorator.(t|j)s',
+    '!**/*.guard.(t|j)s',
+  ],
+  coveragePathIgnorePatterns: [
+    '/node_modules/', // Ignorar arquivos em node_modules (opcional)
+    '/dist/',
+    '\\.d\\.ts$', // Ignorar arquivos com extensão .d.ts
+    '.js',
+  ],
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
 };
