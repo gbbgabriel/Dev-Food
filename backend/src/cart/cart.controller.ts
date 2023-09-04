@@ -24,7 +24,7 @@ export class CartController {
 
   @UsePipes(ValidationPipe)
   @Post()
-  async InsertCartDTO(
+  async createCart(
     @Body() insertCart: InsertCartDTO,
     @UserId() userId: number,
   ): Promise<ReturnCartDTO> {

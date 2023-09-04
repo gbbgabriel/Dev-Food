@@ -11,6 +11,7 @@ import { ReturnCategory } from './dtos/return-category.dto';
 import { CreateCategory } from './dtos/create-category.dto';
 import { UserType } from '@src/user/enum/user-type.enum';
 import { Roles } from '@src/decorators/roles.decorator';
+import { CategoryEntity } from './entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -28,9 +29,7 @@ export class CategoryController {
   @Post()
   async createCategory(
     @Body() createCategory: CreateCategory,
-  ): Promise<ReturnCategory> {
-    return new ReturnCategory(
-      await this.categoryService.createCategory(createCategory),
-    );
+  ): Promise<CategoryEntity> {
+    return this.categoryService.createCategory(createCategory);
   }
 }
