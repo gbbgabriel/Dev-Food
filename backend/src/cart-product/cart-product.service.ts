@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CartProductEntity } from './entities/cart-product.entity';
 import { Repository } from 'typeorm';
 import { ProductService } from '@src/product/product.service';
+import { CartEntity } from '@src/cart/entities/cart.entity';
+import { UpdateCartDto } from '@src/cart/dtos/update-cart.dto';
 
 @Injectable()
 export class CartProductService {
@@ -13,11 +15,14 @@ export class CartProductService {
   ) {}
 
   async verifyProductInCart(
-    cartId: number,
     productId: number,
+    cartId: number,
   ): Promise<CartProductEntity> {
     const cartProduct = await this.cartProductRepository.findOne({
-      where: { cartId, productId },
+      where: {
+        productId,
+        cartId,
+      },
     });
 
     if (!cartProduct) {
@@ -48,7 +53,7 @@ export class CartProductService {
 
     const cartProduct = await this.verifyProductInCart(cartId, productId).catch(
       async () => {
-        return this.createProductCart(cartId, productId, amount);
+        return this.createProductCart(cartId, productId, 0);
       },
     );
 
@@ -69,18 +74,20 @@ export class CartProductService {
     return true;
   }
 
-  async updateAmountProductInCart(
-    productId: number,
-    amount: number,
-    cartId: number,
+  async updateProductAmountInCart(
+    updateCartDTO: UpdateCartDto,
+    cart: CartEntity,
   ): Promise<CartProductEntity> {
-    await this.productService.findProductById(productId);
+    await this.productService.findProductById(updateCartDTO.productId);
 
-    const cartProduct = await this.verifyProductInCart(cartId, productId);
+    const cartProduct = await this.verifyProductInCart(
+      updateCartDTO.productId,
+      cart.id,
+    );
 
     return this.cartProductRepository.save({
       ...cartProduct,
-      amount,
+      amount: updateCartDTO.amount,
     });
   }
 }

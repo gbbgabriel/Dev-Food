@@ -61,7 +61,7 @@ export class CartController {
     @Body() updateCart: InsertCartDTO,
   ): Promise<ReturnCartDTO> {
     return new ReturnCartDTO(
-      await this.cartService.updateAmountProductInCart(updateCart, userId),
+      await this.cartService.updateAmountInCart(updateCart, userId),
     );
   }
 }

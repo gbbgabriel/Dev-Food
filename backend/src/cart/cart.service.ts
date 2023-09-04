@@ -92,7 +92,7 @@ export class CartService {
     );
   }
 
-  async updateAmountProductInCart(
+  async updateAmountInCart(
     updateCartDto: UpdateCartDto,
     userId: number,
   ): Promise<CartEntity> {
@@ -100,10 +100,9 @@ export class CartService {
       return this.createCart(userId);
     });
 
-    await this.cartProductService.updateAmountProductInCart(
-      updateCartDto.productId,
-      updateCartDto.amount,
-      cart.id,
+    await this.cartProductService.updateProductAmountInCart(
+      updateCartDto,
+      cart,
     );
 
     return cart;

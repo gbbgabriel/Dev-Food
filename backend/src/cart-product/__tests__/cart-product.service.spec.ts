@@ -134,8 +134,6 @@ describe('CartProductService', () => {
   it('should return cart product if not exists cart', async () => {
     const spy = jest.spyOn(cartProductRepository, 'save');
 
-    jest.spyOn(cartProductRepository, 'findOne').mockResolvedValue(undefined);
-
     const cartProduct = await service.insertProductInCart(
       cartMock.id,
       inserCartMock.productId,
@@ -143,7 +141,10 @@ describe('CartProductService', () => {
     );
 
     expect(cartProduct).toEqual(cartProductMock);
-    expect(spy.mock.calls[0][0].amount).toEqual(inserCartMock.amount);
+    expect(spy.mock.calls[0][0]).toEqual({
+      ...cartProductMock,
+      amount: cartProductMock.amount + inserCartMock.amount,
+    });
   });
 
   it('should increase the quantity of the product in the cart', async () => {
@@ -168,11 +169,7 @@ describe('CartProductService', () => {
       .mockRejectedValue(new NotFoundException());
 
     expect(
-      service.updateAmountProductInCart(
-        cartMock.id,
-        updateCartMock.productId,
-        updateCartMock.amount,
-      ),
+      service.updateProductAmountInCart(updateCartMock, cartMock),
     ).rejects.toThrowError(NotFoundException);
   });
 
@@ -180,21 +177,16 @@ describe('CartProductService', () => {
     jest.spyOn(cartProductRepository, 'findOne').mockResolvedValue(undefined);
 
     expect(
-      service.updateAmountProductInCart(
-        updateCartMock.amount,
-        updateCartMock.productId,
-        cartMock.id,
-      ),
+      service.updateProductAmountInCart(updateCartMock, cartMock),
     ).rejects.toThrowError(NotFoundException);
   });
 
   it('should return the updated product amount (updateAmountProductInCart)', async () => {
     const spy = jest.spyOn(cartProductRepository, 'save');
 
-    const cartProduct = await service.updateAmountProductInCart(
-      updateCartMock.amount,
-      updateCartMock.amount,
-      cartMock.id,
+    const cartProduct = await service.updateProductAmountInCart(
+      updateCartMock,
+      cartMock,
     );
 
     expect(cartProduct).toEqual(cartProductMock);
