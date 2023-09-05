@@ -1,11 +1,8 @@
-import { UpdatePasswordDto } from '../dtos/updatePassword.dto';
+import { UpdateUserDto } from '../dtos/updateUser.dto';
 
-export const updatePasswordMock: UpdatePasswordDto = {
-  oldPassword: 'abc',
-  newPassword: 'cba',
-};
-
-export const updatePasswordInvalidMock: UpdatePasswordDto = {
-  oldPassword: 'abcInvalid',
-  newPassword: 'bcaInvalid',
+export const updateUserMock: UpdateUserDto = {
+  cpf: '0987654210',
+  email: 'emailMockTeste@email.com',
+  name: 'Name Update',
+  phone: '00991234567',
 };

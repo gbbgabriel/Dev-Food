@@ -8,7 +8,8 @@ import { createUserMock } from '../__mocks__/createUser.mock';
 import {
   updatePasswordInvalidMock,
   updatePasswordMock,
-} from '../__mocks__/updateUser.mock';
+} from '../__mocks__/updateUserPassword.mock';
+import { updateUserMock } from '../__mocks__/updateUser.mock';
 
 describe('UserService', () => {
   let service: UserService;
@@ -111,7 +112,7 @@ describe('UserService', () => {
     jest.spyOn(userRepository, 'save').mockRejectedValue(new Error());
 
     expect(
-      service.updateUser(userEntityMock.id, createUserMock),
+      service.updateUser(userEntityMock.id, updateUserMock),
     ).rejects.toThrowError();
   });
 
