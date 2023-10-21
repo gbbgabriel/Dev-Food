@@ -14,7 +14,6 @@ import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { CartProductModule } from './cart-product/cart-product.module';
-import { Address2Controller } from './address2/address2.controller';
 
 console.log(__dirname);
 
@@ -32,7 +31,7 @@ console.log(__dirname);
       database: process.env.DB_DATABASE,
       synchronize: false,
       entities: [`${__dirname}/**/entities/*.entity{.ts,.js}`],
-      migrations: [`${__dirname}/migration/*{.ts,.js}`],
+      migrations: [`${__dirname}/**/migration/*{.ts,.js}`],
       migrationsRun: true,
     }),
     UserModule,
@@ -47,7 +46,6 @@ console.log(__dirname);
     CartModule,
     CartProductModule,
   ],
-  controllers: [Address2Controller],
   providers: [
     {
       provide: APP_GUARD,
